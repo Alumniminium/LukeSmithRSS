@@ -56,11 +56,11 @@ namespace LukeRSS
         }
         private static void Display()
         {
-            foreach (var kvp in Entries.Take(5))
+            foreach (var (title, content) in Entries.Take(5))
             {
-                Console.WriteLine(kvp.Key);
+                Console.WriteLine(title);
                 Console.WriteLine("------------");
-                Console.WriteLine(kvp.Value.Content);
+                Console.WriteLine(content);
                 Console.WriteLine("____________");
             }
         }
