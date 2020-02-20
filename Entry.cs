@@ -1,5 +1,3 @@
-using System;
-
 namespace LukeRSS
 {
     public class Entry
