@@ -1,11 +1,9 @@
-﻿using System.Linq;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System;
 using System.IO;
-using System.Net;
-using System.Text.RegularExpressions;
 using System.Xml;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace LukeRSS
 {
