@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Linq;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -15,20 +16,12 @@ namespace LukeRSS
         static void Main(string[] args)
         {
             Load();
-
-            foreach (var kvp in Entries)
-            {
-                Console.WriteLine(kvp.Key);
-                Console.WriteLine("------------");
-                Console.WriteLine(kvp.Value.Content);
-                Console.WriteLine("____________");
-            }
-
+            Display();
         }
 
         private static void Load()
         {
-            var aregex = new Regex("<[^>]*>", RegexOptions.Compiled);
+            var htmlRegex = new Regex("<[^>]*>", RegexOptions.Compiled);
             var wc = new WebClient();
             var xml = wc.DownloadString("https://lukesmith.xyz/rss.xml");
             var entry = new Entry();
@@ -50,24 +43,25 @@ namespace LukeRSS
                             if (rdr.Read())
                                 entry.Title = rdr.Value;
                             break;
-                        case "pubDate":
-                            rdr.Read();
-                                //entry.DateTime = DateTime.ParseExact(rdr.Value, "ddd, dd MMM yyyy HH:mm:ss zz00", CultureInfo.InvariantCulture);
-                            break;
                         case "description":
                             if (rdr.Read())
-                            {
-                                entry.Content = aregex.Replace(rdr.Value, "").Trim();
-                                entry.Content = Regex.Replace(entry.Content, @"(\r\n){2,}", "\r\n");
-                                for (int i = 0; i < 1024; i++)
-                                    entry.Content = entry.Content.Replace("  ", " ");
-                            }
-                            if(entry.Title == string.Empty)
-                                entry.Title = "Untitled" +Entries.Count;
+                                entry.Content = htmlRegex.Replace(rdr.Value, "").Trim();
+                            if (entry.Title == string.Empty)
+                                entry.Title = "Untitled" + Entries.Count;
                             Entries.TryAdd(entry.Title, entry);
                             break;
                     }
                 }
+            }
+        }
+        private static void Display()
+        {
+            foreach (var kvp in Entries.Take(5))
+            {
+                Console.WriteLine(kvp.Key);
+                Console.WriteLine("------------");
+                Console.WriteLine(kvp.Value.Content);
+                Console.WriteLine("____________");
             }
         }
     }
